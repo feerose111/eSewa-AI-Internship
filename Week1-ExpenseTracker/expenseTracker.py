@@ -5,7 +5,7 @@ import datetime , pytz
 
 tzNepal = pytz.timezone('Asia/Kathmandu')
 class Tracker:
-    category = ['food', 'other']
+    category = ['food', 'other', 'new category']
     transaction = []
 
     def __init__(self):
@@ -51,8 +51,25 @@ class Tracker:
             df.to_csv("transactions.csv", mode='w', index=False, header=True)
             print("Transaction Successful, Updated your budget !!")
 
-    def showHistory(self):
-        pass
+    def showHistory(self, action):
+        try:
+            with open('history.txt', 'r+') as file:
+                timestamp = datetime.datetime.now(tzNepal).strftime("%Y-%m-%d %X%p ")
+                data = file.read()
+                new_data = f'[{timestamp}],{action}'
+                file.seek(0) #go to the start of the file
+                file.write( new_data + data )
+
+        except FileNotFoundError:
+            with open('history.txt', 'w') as file:
+                timestamp = datetime.datetime.now(tzNepal).strftime("%Y-%m-%d %X%p ")
+                file.write(f'[{timestamp}],{action}')
+
+
+
+
+
+
 
 
 
