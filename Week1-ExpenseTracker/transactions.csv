@@ -1,2 +1,5 @@
-id,datetime,total budget,category,categories,remaining budget
-81714,2025-04-20 17:31:38PM ,1200,,"['food', 'other', 'new category']",900
+85411,2025-04-21 18:15:39PM ,10000,rand,"['food', 'other', 'rand']",9800
+5178,2025-04-21 18:20:08PM ,12000,sel roti,"['food', 'other', 'sel roti']",11800
+65676,2025-04-21 18:20:58PM ,11800,travel,"['food', 'other', 'sel roti', 'travel']",1800
+41223,2025-04-22 10:26:02AM ,12000,food,"['food', 'other']",11700
+67496,2025-04-22 10:27:56AM ,10,food,"['food', 'other']",10

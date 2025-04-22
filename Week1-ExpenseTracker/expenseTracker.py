@@ -1,11 +1,10 @@
-import json
 import pandas as pd
 import random
-import datetime , pytz
+import datetime , pytz , os
 
 tzNepal = pytz.timezone('Asia/Kathmandu')
 class Tracker:
-    category = ['food', 'other', 'new category']
+    category = ['food', 'other']
     transaction = []
 
     def __init__(self):
@@ -29,6 +28,7 @@ class Tracker:
         date = datetime.datetime.now(tzNepal).strftime("%Y-%m-%d %X%p ")
         if self.expense > remBudget:
             print('Your expense exceeds your budget !!')
+            return None
         elif self.expense > 0 :
             remBudget -= self.expense
 
@@ -47,23 +47,26 @@ class Tracker:
             print('No Transaction')
             return
         else:
-            df = pd.DataFrame(Tracker.transaction)
-            df.to_csv("transactions.csv", mode='w', index=False, header=True)
+            filename = 'transactions.csv'
+            df = pd.DataFrame([Tracker.transaction[-1]])
+            if os.path.exists(filename):
+                df.to_csv(filename, mode='a', index=False, header=False)  # No header if file exists
+            else:
+                df.to_csv(filename, mode='w', index=False, header=True)
             print("Transaction Successful, Updated your budget !!")
 
     def showHistory(self, action):
+        timestamp = datetime.datetime.now(tzNepal).strftime("%Y-%m-%d %X%p ")
+        new_data = f'[{timestamp}],{action}\n'
         try:
-            with open('history.txt', 'r+') as file:
-                timestamp = datetime.datetime.now(tzNepal).strftime("%Y-%m-%d %X%p ")
-                data = file.read()
-                new_data = f'[{timestamp}],{action}'
-                file.seek(0) #go to the start of the file
-                file.write( new_data + data )
+            with open('history.txt', 'a') as file:
+                file.write(new_data)
 
-        except FileNotFoundError:
-            with open('history.txt', 'w') as file:
-                timestamp = datetime.datetime.now(tzNepal).strftime("%Y-%m-%d %X%p ")
-                file.write(f'[{timestamp}],{action}')
+        except Exception as e:
+            print("Error saving history:", e)
+
+    def savings(self):
+        pass
 
 
 

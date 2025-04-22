@@ -1,1 +1,27 @@
-[2025-04-20 17:31:56PM ],Exited expense tracker[2025-04-20 17:31:49PM ],Showed remaining budget : 900[2025-04-20 17:31:38PM ],Added 300 to food[2025-04-20 17:26:06PM ],Exited expense tracker[2025-04-20 17:22:57PM ],Added 300 to food[2025-04-20 17:19:53PM ],Exited expense tracker[2025-04-20 17:19:41PM ],Showed remaining budget : 11700[2025-04-20 17:19:39PM ],Added 300 to food[2025-04-20 17:18:56PM ],Added 200 to food[2025-04-20 16:35:38PM ],Exited expense tracker[2025-04-20 16:35:30PM ],Showed remaining budget : 10800[2025-04-20 16:34:11PM ],Added 1200 to clothes
+
+[2025-04-21 17:54:37PM ],12000: Set as total budget
+[2025-04-21 17:55:27PM ],Set total budge: 12000
+[2025-04-21 18:00:30PM ],Set total budge: 10000
+[2025-04-21 18:06:51PM ],Set total budge: 1000
+[2025-04-21 18:07:29PM ],Set total budge: 1000
+[2025-04-21 18:08:13PM ],Set total budge: 1000
+[2025-04-21 18:15:15PM ],Set total budge: 10000
+[2025-04-21 18:15:39PM ],Added 200 to rand
+[2025-04-21 18:18:23PM ],Set total budge: 12000
+[2025-04-21 18:20:08PM ],Added 200 to sel roti
+[2025-04-21 18:20:58PM ],Added 10000 to travel
+[2025-04-21 18:21:29PM ],Set total budge: 1
+[2025-04-21 18:22:01PM ],Exited expense tracker
+[2025-04-22 10:25:55AM ],Set total budget: 12000
+[2025-04-22 10:26:02AM ],Added 300 to food
+[2025-04-22 10:27:50AM ],Set total budget: 10
+[2025-04-22 10:27:56AM ],Added 11 to food
+[2025-04-22 10:30:02AM ],Exited expense tracker
+[2025-04-22 10:30:09AM ],Set total budget: 1
+[2025-04-22 10:30:36AM ],Added 11 to food
+[2025-04-22 10:31:20AM ],Set total budget: 10
+[2025-04-22 10:31:27AM ],Added 11 to food
+[2025-04-22 10:34:11AM ],Set total budget: 1
+[2025-04-22 10:34:16AM ],Added 12 to food
+[2025-04-22 10:34:54AM ],Set total budget: 1
+[2025-04-22 10:35:25AM ],Set total budget: 1

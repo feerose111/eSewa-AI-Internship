@@ -10,6 +10,7 @@ def main():
             tracker = Tracker()
             result = tracker.addBudget(amount)
             print('Your Monthly Budget is ', amount)
+            tracker.showHistory(f'Set total budget: {amount}')
             break
         except ValueError:
             print("Invalid input! Please enter a valid number.")
@@ -26,27 +27,31 @@ def main():
             match option:
                 case 1:
                         while True:
-                            category = str(input(f'Enter Category from {Tracker.category}: ')).lower()
-                            if category not in Tracker.category:
-                                print('Please! Chose a category from the list')
-                                print('If your category is not in the list you can create a new category !!')
-                                if category == 'new category':
-                                    newCat = str(input('Enter a new category to add :')).lower()
-                                    tracker.addCategory(newCat)
-                                    print("New Category added !")
-                                else:
-                                    continue
+                            print(f'Available Categories : {Tracker.category}')
+                            category = str(input(f"Enter Category (or type 'new' to add one) :  ")).lower()
+                            if category == 'new':
+                                newCat = str(input('Enter a new category to add :')).lower()
+                                tracker.addCategory(newCat)
+                                category = newCat
+                                print("New Category added !")
+                                continue
+                            elif category not in Tracker.category:
+                                continue
                             else:
                                 break
+                        tracker.cataName = category
                         expense = int(input('Add Expense : '))
-
                         result = tracker.budgetTracker(expense)
-                        tracker.saveTransaction()
-                        tracker.showHistory(f'Added {expense} to {category}')
+                        if result is None:
+                            print('Expense was too large')
+                            break
+                        else:
+                            tracker.saveTransaction()
+                            tracker.showHistory(f'Added {expense} to {category}')
 
-                        tracker.budget = result['remaining budget']
+                            tracker.budget = result['remaining budget']
 
-                        print('Budget Updated')
+                            print('Budget Updated')
 
                 case 2:
                     remBalance = Tracker.transaction[-1]['remaining budget']
