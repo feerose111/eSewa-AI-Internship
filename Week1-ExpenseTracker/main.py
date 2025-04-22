@@ -49,7 +49,7 @@ def main():
                             tracker.saveTransaction()
                             tracker.showHistory(f'Added {expense} to {category}')
 
-                            tracker.budget = result['remaining budget']
+                            tracker.rembudget = result['remaining budget']
 
                             print('Budget Updated')
 
@@ -57,7 +57,9 @@ def main():
                     remBalance = Tracker.transaction[-1]['remaining budget']
                     print('Your remaining balance is ', remBalance)
                     tracker.showHistory(f'Showed remaining budget : {remBalance}')
-
+                    percentage = (remBalance / amount) * 100
+                    if percentage < 25:
+                        print('Your Budget is getting low. Please spend wisely')
 
                 case 3:
                     try:

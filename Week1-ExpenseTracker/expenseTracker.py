@@ -65,9 +65,6 @@ class Tracker:
         except Exception as e:
             print("Error saving history:", e)
 
-    def savings(self):
-        pass
-
 
 
 
