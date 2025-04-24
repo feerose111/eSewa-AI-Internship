@@ -15,6 +15,19 @@ def main():
         except ValueError:
             print("Invalid input! Please enter a valid number.")
 
+    while True:
+        save_choice = input("Do you want to separate some amount for savings? (y/n): ").strip().lower()
+        if save_choice == 'y':
+            percent = float(input("Enter the percentage of budget you want to save: "))
+            if  0<= percent <= 100:
+                tracker.addSaving(percent)
+                break
+            else:
+                print("Please enter a percentage between 0 and 100.")
+        elif save_choice == 'n':
+            break
+        else:
+            print("Please enter 'y' or 'n'")
 
     while True:
         print('-------Expense Tracker--------')
@@ -40,23 +53,30 @@ def main():
                             else:
                                 break
                         tracker.cataName = category
-                        expense = int(input('Add Expense : '))
-                        result = tracker.budgetTracker(expense)
-                        if result is None:
-                            print('Insufficient Balance; You exited without making transaction!')
-                            break
-                        else:
-                            tracker.saveTransaction()
-                            tracker.showHistory(f'Added {expense} to {category}')
-                            tracker.rembudget = result['remaining budget']
+
+                        try:
+                            expense = int(input('Add Expense: '))
+                            result = tracker.budgetTracker(expense)
+                            if result is None:
+                                print('Transaction failed or was cancelled.')
+                            else:
+                                tracker.saveTransaction()
+                                tracker.showHistory(f'Added {expense} to {category}')
+                        except ValueError:
+                            print("Invalid input. Please enter a valid number.")
 
                 case 2:
-                    remBalance = Tracker.transaction[-1]['remaining budget']
-                    print('Your remaining balance is ', remBalance)
-                    tracker.showHistory(f'Showed remaining budget : {remBalance}')
-                    percentage = (remBalance / amount) * 100
-                    if percentage < 25:
-                        print('Your Budget is getting low. Please spend wisely')
+                    if Tracker.transaction:
+                        remBalance = Tracker.transaction[-1]['remaining budget']
+                        saving = Tracker.transaction[-1]['saving']
+                        print('Your remaining balance is', remBalance)
+                        print('Your savings balance is', saving)
+                        tracker.showHistory(f'Showed remaining budget: {remBalance}, saving: {saving}')
+                        percentage = (remBalance / amount) * 100
+                        if percentage < 25:
+                            print('Your Budget is getting low. Please spend wisely')
+                    else:
+                        print("No transactions found.")
 
                 case 3:
                     try:

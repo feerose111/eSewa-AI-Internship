@@ -10,6 +10,7 @@ class Tracker:
     def __init__(self):
         self.budget = 0
         self.expense = 0
+        self.saving = 0
         self.cataName = None
 
     def addCategory(self, cataName):
@@ -21,6 +22,13 @@ class Tracker:
         self.budget = budget
         return self.budget
 
+    def addSaving(self, percent):
+        self.saving = (percent / 100) * self.budget
+        self.budget -= self.saving
+        self.showHistory(f'Saved {self.saving} ({percent}%) from total budget')
+        print(f'Successfully set aside {self.saving} for savings.')
+        return self.saving
+
     def budgetTracker(self, expense):
         self.expense = expense
         remBudget = self.budget
@@ -29,28 +37,46 @@ class Tracker:
         if self.expense > remBudget:
             lackingBudget = self.expense - remBudget
             print(f'Your expense amount exceeds your budget by: {lackingBudget}!!')
-            choice = input("Do you want to add extra budget? (y/n): ").strip().lower()
-            if choice == 'y':
-                try:
-                    extra = int(input('Enter the additional amount : '))
-                    remBudget += extra
-                    self.showHistory(f'{extra} as extra amount added to the budget')
-                except ValueError:
-                    print("Invalid input. Please enter a number.")
-            else:
-                print("Returning to main menu without adding expense.")
-                self.showHistory('Chose not to add extra budget')
+            if self.saving >= lackingBudget:
+                choice = input("Do you want to use saving to cover this? (y/n): ").strip().lower()
+                if choice == 'y':
+                    self.saving -= lackingBudget
+                    remBudget += lackingBudget
+                    self.showHistory(f'Used {lackingBudget} from savings')
+                    print(f'{lackingBudget} deducted from savings. Remaining saving: {self.saving}')
+                else:
+                    print("Returning to main menu without adding expense.")
+                    self.showHistory('Chose not to use savings.')
+                    return None
+            else :
+                print("Insufficient funds in both budget and savings to cover this expense.")
                 return None
-        elif self.expense > 0 :
-            remBudget -= self.expense
+        remBudget -= self.expense
+
+        if remBudget == 0:
+            print("ALERT: Your budget is now completely depleted!")
+            self.showHistory('Budget depleted to zero')
+
+        elif remBudget < 100 :
+            print('Your remaining balance is less than 100 !')
+            save = input('Do you want to add the rest to saving? (y/n)').strip().lower()
+            if save == 'y':
+                self.saving += remBudget
+                remBudget = 0
+                print('Added remaining budget to saving.')
+                self.showHistory(f'Remaining {remBudget} is added to savings')
+
+        self.budget = remBudget
 
         transaction_data = ({
                 'id':id,
                 'datetime': date,
-                'total budget':self.budget,
+                'total budget':self.budget + self.expense,
                 'category':self.cataName,
                 'categories':Tracker.category,
-                'remaining budget': remBudget})
+                'remaining budget': remBudget,
+                'saving' : self.saving,
+        })
         Tracker.transaction.append(transaction_data)
         return transaction_data
 

@@ -45,3 +45,26 @@
 [2025-04-24 16:29:30PM ],Set total budget: 1000
 [2025-04-24 16:29:51PM ],Added 300 to swim
 [2025-04-24 16:29:55PM ],Showed remaining budget : 700
+[2025-04-24 18:20:04PM ],Set total budget: 100
+[2025-04-24 18:23:52PM ],Set total budget: 100
+[2025-04-24 18:24:18PM ],Saved 30.0 (30.0%) from total budget
+[2025-04-24 18:25:09PM ],Saved 35.0 (50.0%) from total budget
+[2025-04-24 18:27:22PM ],Set total budget: 10000
+[2025-04-24 18:27:30PM ],Saved 2500.0 (25.0%) from total budget
+[2025-04-24 18:28:07PM ],Set total budget: 10000
+[2025-04-24 18:28:18PM ],Saved 2500.0 (25.0%) from total budget
+[2025-04-24 18:30:24PM ],Added 100 to food
+[2025-04-24 18:30:26PM ],Showed remaining budget: 7400.0, saving: 2500.0
+[2025-04-24 18:30:56PM ],Used 200.0 from savings
+[2025-04-24 18:31:11PM ],Remaining 0 is added to savings
+[2025-04-24 18:31:11PM ],Added 7600 to car
+[2025-04-24 18:31:19PM ],Showed remaining budget: 0, saving: 2300.0
+[2025-04-24 18:34:37PM ],Chose not to use savings.
+[2025-04-24 18:38:57PM ],Set total budget: 1200
+[2025-04-24 18:44:23PM ],Set total budget: 12000
+[2025-04-24 18:46:02PM ],Set total budget: 1200
+[2025-04-24 18:46:50PM ],Set total budget: 1200
+[2025-04-24 18:47:33PM ],Set total budget: 1200
+[2025-04-24 18:47:39PM ],Saved 240.0 (20.0%) from total budget
+[2025-04-24 18:48:24PM ],Added 120 to food
+[2025-04-24 18:48:26PM ],Showed remaining budget: 840.0, saving: 240.0
