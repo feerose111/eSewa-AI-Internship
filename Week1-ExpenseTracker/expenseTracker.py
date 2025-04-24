@@ -27,8 +27,20 @@ class Tracker:
         id = random.randint(1,100000)
         date = datetime.datetime.now(tzNepal).strftime("%Y-%m-%d %X%p ")
         if self.expense > remBudget:
-            print('Your expense exceeds your budget !!')
-            return None
+            lackingBudget = self.expense - remBudget
+            print(f'Your expense amount exceeds your budget by: {lackingBudget}!!')
+            choice = input("Do you want to add extra budget? (y/n): ").strip().lower()
+            if choice == 'y':
+                try:
+                    extra = int(input('Enter the additional amount : '))
+                    remBudget += extra
+                    self.showHistory(f'{extra} as extra amount added to the budget')
+                except ValueError:
+                    print("Invalid input. Please enter a number.")
+            else:
+                print("Returning to main menu without adding expense.")
+                self.showHistory('Chose not to add extra budget')
+                return None
         elif self.expense > 0 :
             remBudget -= self.expense
 

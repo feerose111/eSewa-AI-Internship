@@ -29,3 +29,19 @@
 [2025-04-22 10:57:43AM ],Added 200 to food
 [2025-04-22 10:57:57AM ],Added 240 to food
 [2025-04-22 10:58:00AM ],Exited expense tracker
+[2025-04-24 14:09:22PM ],Set total budget: 1000
+[2025-04-24 14:09:43PM ],Extra amount added to the budget
+[2025-04-24 14:14:13PM ],Set total budget: 10
+[2025-04-24 14:14:28PM ],Extra amount added to the budget
+[2025-04-24 14:14:28PM ],Added 200 to food
+[2025-04-24 14:16:59PM ],Exited expense tracker
+[2025-04-24 14:21:39PM ],Set total budget: 10
+[2025-04-24 14:45:30PM ],Set total budget: 10
+[2025-04-24 14:46:33PM ],100 as extra amount added to the budget
+[2025-04-24 14:46:33PM ],Added 20 to food
+[2025-04-24 14:46:55PM ],Showed remaining budget : 110
+[2025-04-24 14:47:11PM ],Chose not to add extra budget
+[2025-04-24 14:47:11PM ],Added 120 to food
+[2025-04-24 16:29:30PM ],Set total budget: 1000
+[2025-04-24 16:29:51PM ],Added 300 to swim
+[2025-04-24 16:29:55PM ],Showed remaining budget : 700

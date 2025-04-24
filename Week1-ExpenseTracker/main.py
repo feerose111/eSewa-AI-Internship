@@ -4,12 +4,12 @@ from expenseTracker import Tracker
 def main():
 
     while True:
-        print('\n Add Total Monthly Budget')
+        print('\n Add Total Budget')
         try:
-            amount = int(input('Enter your monthly budget : '))
+            amount = int(input('Enter your budget : '))
             tracker = Tracker()
             result = tracker.addBudget(amount)
-            print('Your Monthly Budget is ', amount)
+            print('Your Budget is ', amount)
             tracker.showHistory(f'Set total budget: {amount}')
             break
         except ValueError:
@@ -43,15 +43,12 @@ def main():
                         expense = int(input('Add Expense : '))
                         result = tracker.budgetTracker(expense)
                         if result is None:
-                            print('Expense was too large')
+                            print('Insufficient Balance; You exited without making transaction!')
                             break
                         else:
                             tracker.saveTransaction()
                             tracker.showHistory(f'Added {expense} to {category}')
-
                             tracker.rembudget = result['remaining budget']
-
-                            print('Budget Updated')
 
                 case 2:
                     remBalance = Tracker.transaction[-1]['remaining budget']
