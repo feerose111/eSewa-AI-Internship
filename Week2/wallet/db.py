@@ -37,10 +37,29 @@ def create_tables():
     except Exception as e:
         print("Error creating tables:", e)
 
-def add_user(name, tier):
+def find_user(name):
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT id, name, type, balance FROM users WHERE name = %s", (name,))
+                user = cur.fetchone()
+                if user:
+                    return {
+                        "id": user[0],
+                        "name": user[1],
+                        "type": user[2],
+                        "balance": float(user[3])
+                    }
+                else:
+                    return None
+    except Exception as e:
+        print("Error fetching user:", e)
+        return None
+
+def add_user(id, name, tier):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("INSERT INTO users (name, tier, balance) VALUES (%s, %s, %s)", (name, tier, 0.0))
+            cur.execute("INSERT INTO users (id, name, type, balance) VALUES (%s, %s, %s, %s)", (id, name, tier, 0.0))
             conn.commit()
 
 def log_transaction(user_id, tx_type, amount):
