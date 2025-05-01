@@ -9,9 +9,9 @@ def main():
     while True:
         print("1. Sign In")
         print("2. Register")
-        print("3.exit")
+        print("3. Exit")
 
-        choice = input("Choose an option (1 or 2): ")
+        choice = input("Choose an option: ")
 
         if choice == "1":
             name = input("Enter your name: ")
@@ -26,7 +26,8 @@ def main():
                 user = User(
                     user_id = user_data["id"],
                     name = user_data["name"],
-                    tier = user_data["type"]
+                    tier = user_data["type"],
+                    balance = user_data["balance"]
                 )
                 user.show_menu()
             else:
@@ -51,13 +52,18 @@ def main():
             user = User(
                 user_id = user_data["id"],
                 name = user_data["name"],
-                tier = user_data["type"]
+                tier = user_data["type"],
+                balance = user_data["balance"]
             )
             user.show_menu()
 
         elif choice == '3':
-            print('Exiting the Wallet. GoodBye!')
-            break
+            exit = input('Do you want to exit the wallet?(y/n)').lower()
+            if exit == 'y':
+                print('Exiting the Wallet. GoodBye!')
+                break
+            else:
+                continue
         else:
             print("Invalid option. Please run the program again.")
 

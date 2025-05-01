@@ -14,7 +14,7 @@ def create_tables():
                         id SERIAL PRIMARY KEY,
                         name TEXT NOT NULL,
                         type TEXT CHECK (type IN ('personal', 'premium', 'business')) NOT NULL DEFAULT 'personal',
-                        balance NUMERIC(12, 2) DEFAULT 0.00
+                        balance NUMERIC(12, 2) DEFAULT 0.00,
                     );
                 """)
 
