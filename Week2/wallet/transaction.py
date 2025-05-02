@@ -1,4 +1,5 @@
 import db , psycopg2
+from utils import get_user_tier_info
 class Transaction:
     def __init__(self, user_id, tx_type, amount, status = 'pending' , remarks = None):
         self.user_id = user_id #primary key
@@ -11,8 +12,26 @@ class Transaction:
     def get_balance(self):
         return self.current_balance
 
+    def is_allowed(self, tx_category):
+        """checks the rules set for each tier of user"""
+        tier_info, tier = get_user_tier_info(self.user_id)
+
+        if self.amount > tier_info["max_per_transaction"]:
+            print(f"{tx_category.capitalize()} limit exceeded. Max per transaction for {tier}: Rs.{tier_info['max_per_transaction']}")
+            return False
+
+        daily_total = db.get_daily_total(self.user_id, tx_category)
+        if daily_total + self.amount > tier_info["max_daily_total"]:
+            print(f"Daily {tx_category} limit exceeded. Max daily total: Rs.{tier_info['max_daily_total']}")
+            return False
+
+        return True
+
     def deposit(self):
         try:
+            if not self.is_allowed("deposit"):
+                return False
+
             new_balance = db.update_balance(self.user_id, self.amount, 'add')
             if new_balance is not None:
                 self.current_balance = new_balance
@@ -28,11 +47,11 @@ class Transaction:
 
     def withdraw(self):
         try:
-            # Get current balance
+            if not self.is_allowed("withdraw"):
+                return False
             current_balance = db.get_user_balance(self.user_id)
 
             if current_balance >= self.amount:
-                # CHANGE: Store the new balance returned by update_balance
                 new_balance = db.update_balance(self.user_id, self.amount, 'subtract')
                 if new_balance is not None:
                     self.current_balance = new_balance
@@ -58,9 +77,17 @@ class Transaction:
                 return False
 
             receiver_id = receiver_data['id']
+
+            #rules checking for each tier before transfer and transfer fee deduction
+            if not self.is_allowed("transfer"):
+                return False
+            tier_info, _ = get_user_tier_info(self.user_id)
+            fee = (tier_info["transfer_fee_percent"] / 100) * self.amount
+            total_deduct = self.amount + fee
+
             current_balance = db.get_user_balance(self.user_id)
 
-            if current_balance >= self.amount:
+            if current_balance >= total_deduct:
                 with db.get_connection() as conn:
                     try:
                         conn.autocommit = False

@@ -14,7 +14,7 @@ def main():
         try:
             if choice == "1":
 
-                num = int(input("Enter your account numer: "))
+                num = int(input("Enter your account number: "))
                 user_data = db.find_user(num)
 
                 if user_data:

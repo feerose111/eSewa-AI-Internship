@@ -101,8 +101,35 @@ def get_user_balance(user_db_id):
         print(f"Error getting balance: {e}")
         return 0.0
 
+def get_user_tier(user_db_id):
+        try:
+            with get_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("SELECT type FROM users WHERE id = %s", (user_db_id,))
+                    result = cur.fetchone()
+                    if result:
+                        return result[0]
+                    return None
+        except Exception as e:
+            print(f"Error getting tier info: {e}")
+            return None
+
+def get_daily_total(user_id, tx_type):
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT COALESCE(SUM(amount), 0) /* Handles NULL value by returning 0 */
+                    FROM transactions 
+                    WHERE sender_id = %s AND type = %s AND DATE(timestamp) = CURRENT_DATE AND status = 'completed'
+                """, (user_id, tx_type))
+                total = cur.fetchone()[0]
+                return float(total)
+    except Exception as e:
+        print(f"Error calculating daily total: {e}")
+        return 0.0
+
 def record_transaction(sender_id=None, receiver_id=None, tx_type="deposit", amount=0.0, status="completed", remarks=None):
-    """Log a transaction in the database"""
     try:
         with get_connection() as conn:
             with conn.cursor() as cur:
