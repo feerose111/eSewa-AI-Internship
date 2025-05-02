@@ -1,8 +1,6 @@
 from user import User
-from transaction import Transaction
 import db
 import random
-
 
 def main():
     print("Welcome to your personal wallet. ")
@@ -15,17 +13,19 @@ def main():
 
         try:
             if choice == "1":
-                name = input("Enter your name: ")
-                user_data = db.find_user(name)
+
+                num = int(input("Enter your account numer: "))
+                user_data = db.find_user(num)
 
                 if user_data:
-                    print("\n Welcome back!")
-                    print(f"ID: {user_data['id']}")
+                    print("\nWelcome back!")
+                    print(f"Account number: {user_data['acc_num']}")
                     print(f"Name: {user_data['name']}")
                     print(f"Tier: {user_data['type']}")
                     print(f"Balance: Rs.{user_data['balance']:.2f}")
                     user = User(
                         user_id = user_data["id"],
+                        acc_num = user_data["acc_num"],
                         name = user_data["name"],
                         tier = user_data["type"],
                         balance = user_data["balance"]
@@ -35,23 +35,27 @@ def main():
                     print("User not found. Please register first.")
 
             elif choice == "2":
-                id = random.randint(1, 100000)
+                acc_num = random.randint(1, 100000)
                 name = input("Enter your name: ")
-                tier = input("Enter tier (personal/premium/business): ").lower()
+                tier = input("Enter tier (basic/premium/business): ").lower()
 
-                if tier not in ("personal", "premium", "business"):
+                if tier not in ("basic", "premium", "business"):
                     print("Invalid tier. Defaulting to 'personal'.")
-                    tier = "personal"
+                    tier = "basic"
                 try:
-                    db.add_user(id, name, tier)
-                    print(f"\nAccount created for {name} with tier '{tier}'.")
+                    db.add_user(acc_num, name, tier)
 
                     # Confirm by fetching user
-                    user_data = db.find_user(name)
-                    print(f"ID: {user_data['id']}")
+                    user_data = db.find_user(acc_num)
+                    if not user_data:
+                        print("User creation failed. Please try again.")
+                        continue
+                    print(f"\nAccount created for {name} with tier '{tier}'.")
+                    print(f"Account Number: {user_data['acc_num']}")
                     print(f"Balance: Rs.{user_data['balance']:.2f}")
                     user = User(
                         user_id = user_data["id"],
+                        acc_num = user_data["acc_num"],
                         name = user_data["name"],
                         tier = user_data["type"],
                         balance = user_data["balance"]

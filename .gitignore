@@ -1,4 +1,4 @@
 .idea/
 __pycache__/
 *.pyc
-wallet/config.py
+Week2/wallet/config.py

@@ -1,10 +1,11 @@
 from transaction import Transaction
 class User:
-    def __init__(self, user_id, name, tier="personal", balance= 0.0):
+    def __init__(self, user_id, name, acc_num=None, tier="basic", balance= 0.0):
         self.user_id = user_id
         self.name = name
+        self.acc_num = acc_num
         self.tier = tier
-        self.wallet = balance
+        self.balance = balance
 
     def show_menu(self):
         while True:
@@ -23,9 +24,11 @@ class User:
                     if amount <= 0:
                         raise ValueError("Amount must be greater than zero.")
                     tx = Transaction(self.user_id, "deposit", amount = amount)
-                    tx.deposit()
-                    self.wallet += amount
-                    print(f"Deposited Rs.{amount:.2f}. New balance: Rs.{self.wallet:.2f}")
+                    if tx.deposit():
+                        self.balance = tx.get_balance()
+                        print(f"Deposited Rs.{amount:.2f}. New balance: Rs.{self.balance:.2f}")
+                    else:
+                        print("Deposit failed.")
                 except ValueError as e:
                     print ('Invalid input : {e}')
 
@@ -37,8 +40,8 @@ class User:
                     remarks = input("Enter remarks for withdrawal: ")
                     tx = Transaction(self.user_id, "withdraw", amount =amount , remarks = remarks)
                     if tx.withdraw():
-                        self.wallet -= amount
-                        print(f"Withdrawn Rs.{amount:.2f}. New balance: Rs.{self.wallet:.2f}")
+                        self.balance = tx.get_balance()
+                        print(f"Withdrawn Rs.{amount:.2f}. New balance: Rs.{self.balance:.2f}")
                     else:
                         print("Insufficient balance.")
                 except ValueError as e:
@@ -46,15 +49,16 @@ class User:
 
             elif choice == "3":
                 try:
-                    receiver_id = int(input("Enter receiver user ID: "))
+                    receiver_acc_num = int(input("Enter receiver's account number: "))
                     amount = float(input("Enter amount to transfer: "))
                     if amount <= 0:
                         raise ValueError("Amount must be greater than zero.")
                     remarks = input("Enter remarks for transfer: ")
                     tx = Transaction(self.user_id, "transfer", amount = amount, remarks=remarks)
-                    if tx.transfer(receiver_id):
-                        self.wallet -= amount
-                        print(f"Transferred Rs.{amount:.2f} to user ID {receiver_id}. New balance: Rs.{self.wallet:.2f}")
+                    if tx.transfer(receiver_acc_num):
+                        self.balance = tx.get_balance()
+                        #self.wallet -= amount
+                        print(f"Transferred Rs.{amount:.2f} to user ID {receiver_acc_num}. New balance: Rs.{self.balance:.2f}")
                     else:
                         print("Transfer failed due to insufficient balance.")
                 except ValueError as e:
@@ -63,7 +67,7 @@ class User:
                     print(f"Error processing transfer: {e}")
 
             elif choice == "4":
-                print(f"Balance: Rs.{self.wallet:.2f}")
+                print(f"Balance: Rs.{self.balance:.2f}")
 
             elif choice == "5":
                 exit = input("Do you want to exit from your profile? (y/n) ").lower()
