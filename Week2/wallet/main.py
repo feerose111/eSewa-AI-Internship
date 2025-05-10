@@ -65,8 +65,8 @@ def main():
                     print(f"Error while creating user: {e}")
 
             elif choice == '3':
-                exit = input('Do you want to exit the wallet?(y/n)').lower()
-                if exit == 'y':
+                exit_choice = input('Do you want to exit the wallet?(y/n)').lower()
+                if exit_choice == 'y':
                     print('Exiting the Wallet. GoodBye!')
                     break
                 else:

@@ -1,13 +1,22 @@
-import db
-from utils import get_user_tier_info
-class Transaction:
-    def __init__(self, user_id, tx_type, amount, status = 'pending' , remarks = None):
-        self.user_id = user_id #primary key
-        self.tx_type = tx_type
-        self.amount = amount
-        self.status = status
-        self.remarks = remarks
+from Week3.wallet.repo.transaction_repo import TransactionRepo
+from Week3.wallet.repo.user_repo import UserRepo
+import Week3.wallet.utils.db as db
+from Week3.wallet.utils.utils import get_user_tier_info
+from Week3.wallet.model.transaction_model import TransactionModel
+
+
+class TransactionService:
+
+    def __init__(self,data : TransactionModel):
+        self.user_id = data.user_id #primary key
+        self.tx_type = data.tx_type
+        self.amount = data.amount
+        self.status = data.status
+        self.remarks = data.remarks
         self.current_balance = 0.0
+
+        self.wallet = TransactionRepo()
+        self.user = UserRepo()
 
     def get_balance(self):
         return self.current_balance
@@ -20,7 +29,7 @@ class Transaction:
             print(f"{tx_category.capitalize()} limit exceeded. Max per transaction for {tier}: Rs.{tier_info['max_per_transaction']}")
             return False
 
-        daily_total = db.get_daily_total(self.user_id, tx_category)
+        daily_total = self.wallet.get_daily_total(self.user_id, tx_category)
         if daily_total + self.amount > tier_info["max_daily_total"]:
             print(f"Daily {tx_category} limit exceeded. Max daily total: Rs.{tier_info['max_daily_total']}")
             return False
@@ -32,16 +41,16 @@ class Transaction:
             if not self.is_allowed("deposit"):
                 return False
 
-            new_balance = db.update_balance(self.user_id, self.amount, 'add')
+            new_balance = self.user.update_balance(self.user_id, self.amount, 'add')
             if new_balance is not None:
                 self.current_balance = new_balance
-                db.record_transaction(receiver_id=self.user_id, tx_type=self.tx_type,
+                self.wallet.record_transaction(receiver_id=self.user_id, tx_type=self.tx_type,
                                       amount=self.amount, status='completed', remarks=self.remarks)
                 return True
             return False
         except Exception as e:
             print(f"Deposit failed: {e}")
-            db.record_transaction(receiver_id=self.user_id, tx_type=self.tx_type,
+            self.wallet.record_transaction(receiver_id=self.user_id, tx_type=self.tx_type,
                                   amount=self.amount, status='failed', remarks=self.remarks)
             return False
 
@@ -49,29 +58,29 @@ class Transaction:
         try:
             if not self.is_allowed("withdraw"):
                 return False
-            current_balance = db.get_user_balance(self.user_id)
+            current_balance = self.user.get_user_balance(self.user_id)
 
             if current_balance >= self.amount:
-                new_balance = db.update_balance(self.user_id, self.amount, 'subtract')
+                new_balance = self.user.update_balance(self.user_id, self.amount, 'subtract')
                 if new_balance is not None:
                     self.current_balance = new_balance
-                    db.record_transaction(sender_id=self.user_id, tx_type=self.tx_type,
+                    self.wallet.record_transaction(sender_id=self.user_id, tx_type=self.tx_type,
                                           amount=self.amount, status='completed', remarks=self.remarks)
                     return True
             else:
                 print("Insufficient balance.")
-                db.record_transaction(sender_id=self.user_id, tx_type=self.tx_type,
+                self.wallet.record_transaction(sender_id=self.user_id, tx_type=self.tx_type,
                                       amount=self.amount, status='failed', remarks=self.remarks)
                 return False
         except Exception as e:
             print(f"Withdrawal failed: {e}")
-            db.record_transaction(sender_id=self.user_id, tx_type=self.tx_type,
+            self.wallet.record_transaction(sender_id=self.user_id, tx_type=self.tx_type,
                                   amount=self.amount, status='failed', remarks=self.remarks)
             return False
 
     def transfer(self, receiver_acc_num):
         try:
-            receiver_data = db.find_user(receiver_acc_num)
+            receiver_data = self.user.find_user(receiver_acc_num)
             if not receiver_data:
                 print(f"Receiver account #{receiver_acc_num} not found.")
                 return False
@@ -85,7 +94,7 @@ class Transaction:
             fee = (tier_info["transfer_fee_percent"] / 100) * self.amount
             total_deduct = self.amount + fee
 
-            current_balance = db.get_user_balance(self.user_id)
+            current_balance = self.wallet.get_user_balance(self.user_id)
 
             if current_balance >= total_deduct:
                 with db.get_connection() as conn:
@@ -113,14 +122,14 @@ class Transaction:
                         conn.rollback()
                         print(f"Transfer failed, rolling back transaction: {e}")
                         # Record failed transaction
-                        db.record_transaction(sender_id=self.user_id, receiver_id=receiver_id,
+                        self.wallet.record_transaction(sender_id=self.user_id, receiver_id=receiver_id,
                                               tx_type=self.tx_type, amount=self.amount,
                                               status='failed', remarks=self.remarks)
                         return False
             else:
                 print("Insufficient balance to transfer.")
                 if receiver_data:
-                    db.record_transaction(sender_id=self.user_id, receiver_id=receiver_id,
+                    self.wallet.record_transaction(sender_id=self.user_id, receiver_id=receiver_id,
                                           tx_type=self.tx_type, amount=self.amount,
                                           status='failed', remarks=self.remarks)
                 return False

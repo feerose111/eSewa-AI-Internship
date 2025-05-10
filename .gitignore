@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 Week2/wallet/config.py
+Week3/wallet/utils/config.py

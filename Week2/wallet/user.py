@@ -30,7 +30,7 @@ class User:
                     else:
                         print("Deposit failed.")
                 except ValueError as e:
-                    print ('Invalid input : {e}')
+                    print(f'Invalid input : {e}')
 
             elif choice == "2":
                 try:
@@ -45,7 +45,7 @@ class User:
                     else:
                         print("Insufficient balance.")
                 except ValueError as e:
-                    print('Invalid input : {e}')
+                    print(f'Invalid input : {e}')
 
             elif choice == "3":
                 try:
@@ -70,8 +70,8 @@ class User:
                 print(f"Balance: Rs.{self.balance:.2f}")
 
             elif choice == "5":
-                exit = input("Do you want to exit from your profile? (y/n) ").lower()
-                if exit == "y":
+                exit_choice = input("Do you want to exit from your profile? (y/n) ").lower()
+                if exit_choice == "y":
                     break
                 else:
                     continue
