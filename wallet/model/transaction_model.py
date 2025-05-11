@@ -5,10 +5,10 @@ from decimal import Decimal
 
 class TransactionModel(BaseModel):
     id: Optional[int] = Field(default=None)
-    sender_id: Optional[int]
-    receiver_id: Optional[int]
+    sender_id: Optional[int] = None
+    receiver_id: Optional[int] = None
     datetime: Optional[datetime] = None
-    type: Literal['deposit', 'withdraw', 'transfer']
+    tx_type: Literal['deposit', 'withdraw', 'transfer', 'balance']
     amount: Decimal
     status: Literal['pending', 'failed', 'completed'] = 'pending'
     remarks: str
