@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from wallet.controller import user_controller
 from wallet.controller import transaction_controller
 
+
 app = FastAPI()
 
 @app.get("/")

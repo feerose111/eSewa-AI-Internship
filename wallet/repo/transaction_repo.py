@@ -48,7 +48,7 @@ class TransactionRepo:
                         WHERE sender_id = %s AND type = %s AND DATE(timestamp) = CURRENT_DATE AND status = 'completed'
                     """, (user_id, tx_type))
                     total = cursor.fetchone()[0]
-                    return float(cursor.fetchone()[0])
+                    return float(total)
 
     def transfer_funds(self, sender_id, receiver_id, amount, tx_type, remarks):
         try:

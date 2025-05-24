@@ -1,7 +1,6 @@
-from typing import Optional, Dict, Any
 from wallet.utils.db import db
 from contextlib import contextmanager
-
+from decimal import Decimal
 
 class UserRepo:
     _instance = None
@@ -38,7 +37,7 @@ class UserRepo:
                     "acc_num": user[1],
                     "name": user[2],
                     "type": user[3],
-                    "balance": float(user[4])
+                    "balance":Decimal(str(user[4]))
                 }
             return None
 
