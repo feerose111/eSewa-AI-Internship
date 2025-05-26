@@ -9,65 +9,36 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 # Load data
 df = pd.read_csv('processed_retail_data.csv')
 
+#-------------------figure-section-----------------------------------------------
+
 grouped_df = df.groupby(['Age', 'Gender'], as_index=False)['Avg_Spend'].sum()
 # Create initial figure
-fig1 = px.bar(
-    grouped_df,
-    x='Age',
-    y='Avg_Spend',
-    color='Gender',
-    color_discrete_sequence=px.colors.qualitative.Bold,
-    barmode='group',
-    title='Average Spending by Age'
+fig1 = px.bar(grouped_df, x='Age', y='Avg_Spend', color='Gender', color_discrete_sequence=px.colors.qualitative.Bold,
+       barmode='group',
+       title='Average Spending by Age'
 )
 
-# Set initial dark theme
-fig1.update_layout(
-    plot_bgcolor='rgba(10,10,10,0.1)',
-    paper_bgcolor='black',
-    font_color='white',
-    hoverlabel=dict(bgcolor='black')
-)
+fig2 = px.sunburst(df, path=['Product_Category', 'Product_Brand'], values='Total_Amount', title='Spending on brands')
 
+df['DateTime'] = pd.to_datetime(df['DateTime'])
+df['Hour'] = df['DateTime'].dt.hour
+df['Weekday'] = df['DateTime'].dt.day_name()
+heatmap_data = df.pivot_table(index='Weekday', columns='Hour', values='Purchase_Count', aggfunc='sum')
+
+fig3 = px.imshow(heatmap_data, title='Hourly heatmap of purchase count each weekday',labels=dict(x="Hour", y="Weekday", color="Purchase Count"),
+                 color_continuous_scale='Viridis')
+
+
+#---------------------app-section----------------------------------------
 app.layout = html.Div([
     html.H3("Customer Spending Dashboard", style={'textAlign': 'center'}),
-    dbc.Switch(
-        id='theme-toggle',
-        label="Dark Mode",
-        value=True,  # Default to dark mode
-        style={'margin': '10px auto', 'display': 'block', 'width': 'fit-content'}
-    ),
-    dcc.Graph(id='bar-plot', figure=fig1)
-])
+    dbc.Row([  # Wrap graphs in a Row
+        dbc.Col(dcc.Graph(id='bar-plot', figure=fig1), width=6),
+        dbc.Col(dcc.Graph(id='sunburst-plot', figure=fig2), width=6)
+        ], justify="center"),
+    dcc.Graph(id ='heatmap-plot', figure=fig3),
 
-# Add callback to handle theme switching
-@callback(
-    Output('bar-plot', 'figure'),
-    Output('theme-toggle', 'label'),
-    Input('theme-toggle', 'value')
-)
-def update_theme(is_dark):
-    if is_dark:
-        # Dark theme settings
-        fig1.update_layout(
-            plot_bgcolor='rgba(10,10,10,0.1)',
-            paper_bgcolor='black',
-            font_color='white',
-            hoverlabel=dict(bgcolor='black'),
-            title='Average Spending by Age'
-        )
-        label = "Dark Mode"
-    else:
-        # Light theme settings
-        fig1.update_layout(
-            plot_bgcolor='white',
-            paper_bgcolor='aliceblue',
-            font_color='black',
-            hoverlabel=dict(bgcolor='white'),
-            title='Average Spending by Age'
-        )
-        label = "Light Mode"
-    return fig1, label
+])
 
 if __name__ == '__main__':
     app.run(debug=True)
