@@ -10,22 +10,21 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 df = pd.read_csv('processed_retail_data.csv')
 
 #-------------------figure-section-----------------------------------------------
-
 grouped_df = df.groupby(['Age', 'Gender'], as_index=False)['Avg_Spend'].sum()
 # Create initial figure
 fig1 = px.bar(grouped_df, x='Age', y='Avg_Spend', color='Gender', color_discrete_sequence=px.colors.qualitative.Bold,
        barmode='group',
-       title='Average Spending by Age'
+       title='Sum Of Spending By Age'
 )
 
-fig2 = px.sunburst(df, path=['Product_Category', 'Product_Brand'], values='Total_Amount', title='Spending on brands')
+fig2 = px.sunburst(df, path=['Product_Category', 'Product_Brand'], values='Total_Amount', title='Spending On Brands')
 
 df['DateTime'] = pd.to_datetime(df['DateTime'])
 df['Hour'] = df['DateTime'].dt.hour
 df['Weekday'] = df['DateTime'].dt.day_name()
 heatmap_data = df.pivot_table(index='Weekday', columns='Hour', values='Purchase_Count', aggfunc='sum')
 
-fig3 = px.imshow(heatmap_data, title='Hourly heatmap of purchase count each weekday',labels=dict(x="Hour", y="Weekday", color="Purchase Count"),
+fig3 = px.imshow(heatmap_data, title='Hourly Heatmap Of Purchase Count Each Weekday',labels=dict(x="Hour", y="Weekday", color="Purchase Count"),
                  color_continuous_scale='Viridis')
 
 
