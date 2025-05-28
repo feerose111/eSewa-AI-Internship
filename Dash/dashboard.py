@@ -2,12 +2,14 @@ from dash import Dash, html, dcc, Input, Output, callback
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
+import geopandas as gpd
 
 # Initialize the app
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Load data
 df = pd.read_csv('processed_retail_data.csv')
+gdf = gpd.read_file('city_spend.geojson')
 
 #-------------------figure-section-----------------------------------------------
 grouped_df = df.groupby(['Age', 'Gender'], as_index=False)['Avg_Spend'].sum()
@@ -27,6 +29,25 @@ heatmap_data = df.pivot_table(index='Weekday', columns='Hour', values='Purchase_
 fig3 = px.imshow(heatmap_data, title='Hourly Heatmap Of Purchase Count Each Weekday',labels=dict(x="Hour", y="Weekday", color="Purchase Count"),
                  color_continuous_scale='Viridis')
 
+gdf['lon'] = gdf.geometry.x
+gdf['lat'] = gdf.geometry.y
+df['Total_Spend'] = df['Avg_Spend'] * df['Purchase_Count']
+
+fig4 = px.scatter_geo(gdf, lat='lat', lon='lon', hover_name='City',
+    hover_data={'Country': True, 'Total_Spend': ':.2f'},
+    size='Total_Spend',
+    color='Total_Spend',
+    color_continuous_scale='Viridis',
+    projection='natural earth',
+    title='Total Spend per City'
+)
+
+fig4.update_layout(
+    geo=dict(showland=True, landcolor="lightgray", showcountries=True, countrycolor="black", showocean=True, oceancolor="lightblue",
+             projection_type="equirectangular"),
+    margin={"r":0, "t":25, "l":0, "b":0}
+)
+
 
 #---------------------app-section----------------------------------------
 app.layout = html.Div([
@@ -36,6 +57,7 @@ app.layout = html.Div([
         dbc.Col(dcc.Graph(id='sunburst-plot', figure=fig2), width=6)
         ], justify="center"),
     dcc.Graph(id ='heatmap-plot', figure=fig3),
+    dcc.Graph(id='geo-plot', figure=fig4)
 
 ])
 
